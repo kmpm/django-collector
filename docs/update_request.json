@@ -1,0 +1,15 @@
+[
+    {
+        "request_at":"2009-10-26 14:02:57.170960",
+        "driver_name":"fst",
+        "driver_routing_key":"collector.drivers.sim",
+        "tags": [
+            {
+                "name":"ML118_ON",
+                "device":"localhost",
+                "address":"WM118",
+                "set_value": null
+            }
+        ]
+    }
+]

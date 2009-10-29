@@ -1,0 +1,20 @@
+[
+   
+    {
+        "pk": 1, 
+        "model": "collector.tag", 
+        "fields": {
+            "created_at": "2009-08-21 15:13:21", 
+            "pv": "", 
+            "updated_at": "2009-08-21 15:13:21", 
+            "last_read_at": "2009-08-21 15:12:59", 
+            "driver": 1, 
+            "sv": "", 
+            "cv": "", 
+            "address": "MW10", 
+            "device": "localhost", 
+            "last_write_at": "2009-08-21 15:12:59", 
+            "slug": "SIM_TEMP_1"
+        }
+    }
+]
