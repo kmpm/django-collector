@@ -17,7 +17,7 @@ from messageing import *
 #    
 
 def process_responses(logger=logging, **kwargs):
-    get_responses()
+    get_responses(logger)
     
     
 def poll_external(logger=logging):

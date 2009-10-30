@@ -12,8 +12,8 @@ class Server(object):
                     userid='collectoruser', password='password',
                     virtual_host='collectorvhost')
         
-        self.publisher = Publisher(connection=conn, exchange="collector",
-            exchange_type='topic',
+        self.publisher = Publisher(connection=conn, exchange="collector.response",
+            exchange_type='direct',
             routing_key="response", serializer="json")
             
         self.consumer = Consumer(connection=conn, queue="feed",
@@ -33,7 +33,6 @@ class Server(object):
         drivers.append(message_data)
         for obj in drivers:
             driver = None
-            print "driver=%s" % driver
             module_name = obj["driver_routing_key"]
             try:
                 __import__(module_name)
@@ -46,11 +45,11 @@ class Server(object):
                 if driver:
                     value = driver.read_value(tag['device'], tag['address'])
                 else:
-                    value="BAD_DATA"
+                    value="BAD_DRIVER"
                 values.append({'name':tag['name'],
                         'current_value':value, 
                         'read_at':'2009-01-01'})
-            self.publisher.send(values, routing_key="response.%s" % module_name)
+            self.publisher.send(values)
                         
         message.ack()
         

@@ -24,18 +24,19 @@ def send_requests(requests, **options):
     connection.close()
 
 
-def get_responses():
+def get_responses(logger=logging):
     connection = DjangoBrokerConnection()
     consumer = Consumer(connection=connection,
-                              exchange="collector",
+                              exchange="collector.response",
                               queue="responses",
-                              routing_key="response.*")
+                              routing_key="response")
     
     for message in consumer.iterqueue():
         responses = message.payload
         for resp in responses:
+            logger.info("resp=%s" % resp )
             tag=Tag.objects.get(name=resp['name'])
-            print "Could have save %s for tag %s" % (resp['value'], tag.id,)
+            print "Could have saved '%s' for tag '%s'" % (resp['current_value'], tag.id,)
         message.ack()
         
     consumer.close()

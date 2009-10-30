@@ -39,4 +39,6 @@ class ProcessResponses(PeriodicTask):
     def run(self, **kwargs):
         logger = self.get_logger(**kwargs)
         logger.info('ProcessResponses')
-        processing.process_responses()
+        processing.process_responses(logger)
+
+tasks.register(ProcessResponses)
