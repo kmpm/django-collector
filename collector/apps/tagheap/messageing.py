@@ -34,9 +34,13 @@ def get_responses(logger=logging):
     for message in consumer.iterqueue():
         responses = message.payload
         for resp in responses:
-            logger.info("resp=%s" % resp )
-            tag=Tag.objects.get(name=resp['name'])
-            print "Could have saved '%s' for tag '%s'" % (resp['current_value'], tag.id,)
+            logger.debug("resp=%s" % resp )
+            try:
+                tag=Tag.objects.get(name=resp['name'])
+                tag.save_with_history(resp['current_value'])
+            except Exception as ex:
+                logger.error(ex)
+            #print "Could have saved '%s' for tag '%s'" % (resp['current_value'], tag.id,)
         message.ack()
         
     consumer.close()

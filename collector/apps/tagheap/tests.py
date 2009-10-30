@@ -8,31 +8,55 @@ from datetime import datetime
 from django.test import Client
 from django.core.urlresolvers import reverse
 
+        
 
-#class TestTag(TestCase):
-#    fixtures = ['testdata.json']
+        
+class TestTag(TestCase):
+    fixtures = ['testdata.json']
     
-#    def test_tags_on_driver(self):
-#        driver = Driver.objects.get(id=1)
-#        tags = driver.tags.all()
-#        self.assertEqual(1, len(tags))
+    def test_tags_on_driver(self):
+        driver = Driver.objects.get(id=1)
+        tags = driver.tags.all()
+        self.assertEqual(2, len(tags))
 
-#    def test_driver_on_tag(self):
-#        tag = Tag.objects.get(id=1)
-#        self.assertEqual('Sim', tag.driver.slug)
+    def test_driver_on_tag(self):
+        tag = Tag.objects.get(id=1)
+        driver = Driver.objects.get(id=1)
+        self.assertEqual(driver.name, tag.driver.name)
                 
-#    def test_driver_on_tag_through_slug(self):
-#        tags = Tag.objects.filter(driver__slug='Sim')
-#        self.assertEqual(1, len(tags))
+    def test_driver_on_tag_through_slug(self):
+        tags = Tag.objects.filter(driver__name='sim_10')
+        self.assertEqual(2, len(tags))
 
-#    def test_tags_to_be_polled(self):
-#        tags = Tag.objects.filter(driver__poll_next_at__lte=datetime.now())
-#        self.assertEqual(1, len(tags))
+    def test_tags_to_be_polled(self):
+        tags = Tag.objects.filter(driver__poll_next_at__lte=datetime.now())
+        self.assertEqual(2, len(tags))
 
-#    def test_tag_read(self):
-#        tag = Tag.objects.all()[:1][0]
-#        value = tag.read_value()
-#        tag.save()
+    def test_tag_formula(self):
+        tag = Tag.objects.get(id=2)
+        tag.save_with_history(30)
+        self.assertEqual(15, tag.cv)
+        self.assertEqual(True, tag.good_data)
+        
+        tag.save_with_history("101")
+        self.assertEqual(50, tag.cv)
+        
+        tag.save_with_history("ape")
+        self.assertEqual("BAD_DATA", tag.cv)
+        self.assertEqual(False, tag.good_data)
+    
+    def test_tag_alarm(self):
+        tag = Tag.objects.get(id=2)
+        tag.save_with_history(30)
+        self.assertEqual(15, tag.cv)
+        self.assertEqual(False, tag.alarm)
+        
+        tag.save_with_history("ape")
+        self.assertEqual(True, tag.alarm)
+        
+        tag.save_with_history("101")
+        self.assertEqual(True, tag.alarm)
+        
  
 class TestMessageing(TestCase):
     def test_amqp(self):

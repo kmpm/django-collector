@@ -28,7 +28,7 @@ class Server(object):
         self.consumer.wait()
         
     def _get_request_callback(self, message_data, message):
-        print "message_data=%s" % message_data
+        #print "message_data=%s" % message_data
         drivers=[]
         drivers.append(message_data)
         for obj in drivers:

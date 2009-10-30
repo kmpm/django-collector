@@ -36,10 +36,12 @@ class Tag(models.Model):
     enabled = models.BooleanField(_('enabled'), default=True)
     comment = models.CharField(_('comment'), max_length=200, blank=True)
     cv = models.CharField(_('current value'), max_length=20, blank=True, null=True)
+    data_good=models.BooleanField(_('data good'), default=True)
     pv = models.CharField(_('previous value'), max_length=20, blank=True, null=True)
-    sv = models.CharField(_('set value'), max_length=20, blank=True, null=True)
-    last_read_at = models.DateTimeField(_('last read at'), default=datetime.now)
-    last_write_at = models.DateTimeField(_('last write at'), default=datetime.now)
+    formula = models.CharField(_('formula'), max_length=200, blank=True, null=True)
+    alarm_rule = models.CharField(_('alarm rule'), max_length=200, blank=True, null=True)
+    alarm=models.BooleanField(_('alarm'), default=False)
+    raw_value= models.CharField(_('raw value'), max_length=20, blank=True, null=True)
     last_change_at = models.DateTimeField(_('last change at'), default=datetime(1900, 01, 01, 00,00,01))
     created_at = models.DateTimeField(_('created at'), auto_now_add=True)
     updated_at = models.DateTimeField(_('updated at'), auto_now=True)
@@ -51,29 +53,45 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
     
-    def read_value(self):
-        name = self.driver.driver_package
-        __import__(name)
-        module = sys.module[name]
-        driver = module.Driver()
-        value = driver.read_value(self.device, self.address)
-        self.save_with_history(value)
-        return value
     
     def save_with_history(self, value):
-        if self.cv != value:
-            self.logs.create(v=value)
-            self.pv = self.cv
+        if self.raw_value != value:
+            self.good_data=True
+            #calculate cv
+            if self.formula:
+                try:
+                    self.cv = eval(self.formula)
+                except:
+                    self.cv="BAD_DATA"
+                    self.good_data=False
+            else:
+                self.cv = value
+            
+            #check if alarm
+            if self.alarm_rule:
+                try:
+                    if eval(self.alarm_rule):
+                        self.alarm=True
+                    else:
+                        self.alarm=False
+                except:
+                    self.alarm=True
+            self.raw_value=value
             self.last_change_at = datetime.now()
-        self.cv = value
-        self.last_read_at = datetime.now()
-        self.save()
+            #save the new value
+            self.pv = self.cv
+            self.save()
+            #create a log
+            self.logs.create(v=self.cv, raw_value=value, alarm=self.alarm)
+            
 
     
     
 class TagLog(models.Model):
     tag = models.ForeignKey(Tag, verbose_name=_('tag'), related_name="logs")
-    v = models.CharField(_('value'), max_length=20)
+    v = models.CharField(_('value'), max_length=20, blank=True, null=True) 
+    raw_value = models.CharField(_('raw value'), max_length=20, blank=True, null=True) 
+    alarm=models.BooleanField(_('alarm'), default=False)
     created_at = models.DateTimeField(_('created at'), default=datetime.now)
     
     class Meta:

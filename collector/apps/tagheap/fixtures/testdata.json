@@ -1,20 +1,54 @@
 [
-   
     {
         "pk": 1, 
-        "model": "collector.tag", 
+        "model": "tagheap.driver", 
         "fields": {
-            "created_at": "2009-08-21 15:13:21", 
+            "poll_status": "AA", 
+            "name": "sim_10", 
+            "updated_at": "2009-10-30 10:52:16", 
+            "enabled": true, 
+            "created_at": "2009-10-30 10:52:16", 
+            "poll_interval": 10, 
+            "polled_at": "2009-10-30 10:51:41", 
+            "poll_next_at": "2009-10-30 10:51:41", 
+            "routing_key": "collector.drivers.sim"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "tagheap.tag", 
+        "fields": {
+            "comment": "", 
             "pv": "", 
-            "updated_at": "2009-08-21 15:13:21", 
-            "last_read_at": "2009-08-21 15:12:59", 
+            "name": "SIM_TAG", 
+            "updated_at": "2009-10-30 10:53:33", 
             "driver": 1, 
-            "sv": "", 
-            "cv": "", 
-            "address": "MW10", 
-            "device": "localhost", 
-            "last_write_at": "2009-08-21 15:12:59", 
-            "slug": "SIM_TEMP_1"
+            "created_at": "2009-10-30 10:53:33", 
+            "last_change_at": "1900-01-01 00:00:01", 
+            "enabled": true, 
+            "address": "driver_specific_address", 
+            "device": "driver_specific_device", 
+            
+            "cv": ""
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "tagheap.tag", 
+        "fields": {
+            "comment": "", 
+            "pv": "", 
+            "name": "SIM_RANDINT", 
+            "updated_at": "2009-10-30 10:53:33", 
+            "driver": 1, 
+            "alarm_rule": "int(value)>100",
+            "formula": "int(value)/2",
+            "created_at": "2009-10-30 10:53:33", 
+            "last_change_at": "1900-01-01 00:00:01", 
+            "enabled": true, 
+            "address": "1,100", 
+            "device": "randint", 
+            "cv": ""
         }
     }
 ]
