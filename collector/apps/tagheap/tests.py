@@ -1,7 +1,6 @@
 # coding=utf-8
 from django.test import TestCase
 from models import *
-from collector.collector_app.models import Driver
 from datetime import datetime
 
 
