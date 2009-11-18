@@ -10,7 +10,8 @@ class TagLogInline(admin.TabularInline):
     extra=0
 
 class TagAdmin(admin.ModelAdmin):
-    list_display=['name', 'enabled', 'driver', 'device', 'address', 'cv', 'pv', 'sv', 'last_read_at', 'last_change_at', 'comment']
+    list_display=['name', 'enabled', 'driver', 'device', 'address', 
+        'cv', 'pv', 'alarm','last_change_at', 'comment']
     inlines= [TagLogInline]
     list_filter = ['driver', 'device']
     search_fields = ['name']

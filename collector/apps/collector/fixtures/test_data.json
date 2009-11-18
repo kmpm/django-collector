@@ -1,7 +1,7 @@
 [
     {
         "pk": 1, 
-        "model": "tagheap.driver", 
+        "model": "collector.driver", 
         "fields": {
             "poll_status": "AA", 
             "name": "sim_10", 
@@ -16,7 +16,7 @@
     }, 
     {
         "pk": 1, 
-        "model": "tagheap.tag", 
+        "model": "collector.tag", 
         "fields": {
             "comment": "", 
             "pv": "", 
@@ -34,7 +34,7 @@
     },
     {
         "pk": 2, 
-        "model": "tagheap.tag", 
+        "model": "collector.tag", 
         "fields": {
             "comment": "", 
             "pv": "", 

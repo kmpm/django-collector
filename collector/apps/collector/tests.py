@@ -4,7 +4,7 @@ from models import *
 from datetime import datetime
 
 
-#from jsonrpc.proxy import ServiceProxy
+from jsonrpc.proxy import ServiceProxy
 from django.test import Client
 from django.core.urlresolvers import reverse
 
@@ -12,7 +12,7 @@ from django.core.urlresolvers import reverse
 
         
 class TestTag(TestCase):
-    fixtures = ['testdata.json']
+    fixtures = ['test_data.json']
     
     def test_tags_on_driver(self):
         driver = Driver.objects.get(id=1)
@@ -24,7 +24,7 @@ class TestTag(TestCase):
         driver = Driver.objects.get(id=1)
         self.assertEqual(driver.name, tag.driver.name)
                 
-    def test_driver_on_tag_through_slug(self):
+    def test_driver_on_tag_through_name(self):
         tags = Tag.objects.filter(driver__name='sim_10')
         self.assertEqual(2, len(tags))
 
@@ -78,22 +78,24 @@ class TestMessageing(TestCase):
         send_requests([{'driver_routing_key': 'collector.driver.test', 
             'data':"test_send_req"}])
    
-#class TestJson(TestCase):
-#    URL='http://localhost:8000/collector/json/'
-#    def test_tag_list(self):
-#        s = ServiceProxy(self.URL)
+class TestJson(TestCase):
+    URL='http://localhost:8000/collector/json/'
+    fixtures=['test_data.json',]
+    def test_tag_list(self):
+        s = ServiceProxy(self.URL)
         
         
-#        result = s.collector.getTagList()
-#        tags=result['result']
-#        self.assertTrue(len(tags)>0)
-#        self.assertEqual(result['error'], None)
-#        self.assertEqual(tags[0]['tag'], 'SIM_TEMP_1')
-#        #print repr(s.collector.getTagList())
-#        #print repr(s.collector.getTag('SIM_TEMP_1'))
+        result = s.collector.getTagList()
+        tags=result['result']
+        self.assertTrue(len(tags)>0)
+        self.assertEqual(result['error'], None)
+        self.assertEqual(tags[0]['tag'], 'SIM_RANDINT')
+       
 
-#    def test_json_html(self):
-#        client=Client()
-#        response = client.post('/collector/json/',{'method':'collector.getTagList', 'params':None, 'id':'jsonrpc'} )
-#        self.assertEqual("", repr(response.content))
+    def test_json_html(self):
+        client=Client()
+        data = '{"id":"jsonrpc", "params":[], "method":"collector.getTagList", "jsonrpc":"1.0"}'
+        response = client.post('/collector/json/',data,
+                content_type="text/plain", HTTP_X_REQUESTED_WITH='XMLHttpRequest' )
+        self.assertEqual("", repr(response.content))
         

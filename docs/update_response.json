@@ -2,6 +2,7 @@
     {
         "name":"ML118_ON",
         "read_at": "2009-08-25 19:09:37",
-        "current_value": null
+        "current_value": null,
+        "good_read":"true"
     }
 ]

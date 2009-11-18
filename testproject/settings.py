@@ -86,5 +86,5 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin', 
     'celery',
-    'collector.apps.tagheap',
+    'collector.apps.collector',
 )
