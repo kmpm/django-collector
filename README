@@ -1,0 +1,6 @@
+====================
+Django Collector
+====================
+A django application that uses a distributed method (celery) for collecting
+measurements.
+
