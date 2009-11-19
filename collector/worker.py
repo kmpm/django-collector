@@ -6,15 +6,23 @@ from carrot.connection import BrokerConnection
 from datetime import datetime
 import sys
 
-class Service(object):
-    def __init__(self, hostname='localhost', port=5672, **options):
-        conn=BrokerConnection(hostname=hostname, port=port,
-                    userid='collectoruser', password='password',
-                    virtual_host='collectorvhost')
+
+
+class Worker(object):
+    def __init__(self, hostname='localhost', port=5672, userid="collectoruser", 
+                password="password", **options):
         
-        self.publisher = Publisher(connection=conn, exchange="collector.response",
-            exchange_type='direct',
-            routing_key="response", serializer="json")
+        conn=BrokerConnection(hostname=hostname, port=port,
+                    userid=userid, password=password,
+                    virtual_host='collectorvhost')
+    
+            
+        try:
+            self.publisher = Publisher(connection=conn, exchange="collector.response",
+                exchange_type='direct',
+                routing_key="response", serializer="json")
+        except Exception as ex:
+            raise Worker.ConnectionException(ex)
             
         self.consumer = Consumer(connection=conn, queue="feed",
                     exchange_type='topic',
@@ -56,4 +64,9 @@ class Service(object):
             else:
                 print "Badly formated request %s" % obj            
         message.ack()
-        
+
+    class WorkerException(Exception):
+        pass
+    
+    class ConnectionException(WorkerException):
+        pass
