@@ -4,3 +4,22 @@ Django Collector
 A django application that uses a distributed method (celery) for collecting
 measurements.
 
+Just a word of warning. This project should be considered 
+very UNSTABLE for the time beeing. 
+There are a lot of design desitions to make and try out before anything goes stable.
+
+
+
+Flow of things
+==============
+This is how it works for the moment but it will certanly change.
+
+A process driven by celery on the server sends out requests for information
+periodically based on information in the database.
+
+A worker process on the same or other computer listen for these request,
+fetches whats requested and responds.
+
+Another process on the celery also driven by celery process these responses as
+they come in and update the corresponding tables and fields in the database.
+
